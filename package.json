@@ -1,6 +1,6 @@
 {
-  "name": "nodebot",
-  "version": "1.0.0",
+  "name": "nodemcu-j5",
+  "version": "0.0.1",
   "description": "",
   "main": "index.js",
   "dependencies": {
