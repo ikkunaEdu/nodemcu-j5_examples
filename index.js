@@ -1,11 +1,10 @@
 const {EtherPortClient} = require("etherport-client");
-const {Board, Button} = require('johnny-five');
-const TogglClient = require('toggl-api');
-const toggl = new TogglClient({apiToken: ''});
+const {Board, Servo, Fn} = require('johnny-five');
+const temporal = require('temporal');
 
 const board = new Board({
   port: new EtherPortClient({
-    host: "192.168.1.144",  // IP ESP8266
+    host: "192.168.0.113",  // IP ESP8266
     port: 3030
   }),
   timeout: 10000,
@@ -15,16 +14,32 @@ const board = new Board({
 board.on('ready', onReady);
 
 function onReady() {
-  const mainTask = new Button(16);
-  const interruption = new Button(5);
-  mainTask.on("press", () => {
-    toggl.startTimeEntry({
-    description: 'Work, work.'
-    }, function(err, timeEntry) {})
-  });
-  interruption.on("press", () => {
-    toggl.startTimeEntry({
-      description: 'Interrupted'
-    }, function(err, timeEntry) {})
-  });
+  var servo1 = new Servo(5);
+  var servo2 = new Servo(0);
+  var servo3 = new Servo(4);
+
+  servo3.min();
+
+  this.loop(5000, () => oc())
+  function oc() {
+    temporal.queue(
+      [
+      {
+        delay: 2500,
+        task: function () {
+          servo1.to(0);
+          servo2.to(180)
+        }
+      },
+      {
+        delay: 2500,
+        task: function () {
+          servo1.to(40);
+          servo2.to(140);
+        }
+      }
+  
+    ])
+  }
+
 }
